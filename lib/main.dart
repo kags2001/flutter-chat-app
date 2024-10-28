@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: 'login',
+      initialRoute: 'users',
       debugShowCheckedModeBanner: false,
       routes: appRoutes,
       title: 'Flutter Demo',
