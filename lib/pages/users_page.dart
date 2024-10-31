@@ -1,5 +1,7 @@
 import 'package:chat_app/models/user.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UsersPage extends StatefulWidget {
@@ -14,24 +16,29 @@ class _UsersPageState extends State<UsersPage> {
       RefreshController(initialRefresh: false);
 
   final users = [
-    User(true, 'test1@test.com', 'Maria', '1'),
-    User(false, 'test2@test.com', 'Melissa', '2'),
-    User(true, 'test2@test.com', 'Fernando', '3'),
+    User(name: 'pepito', email: 'sipues@dasdas', online: true, uid: ''),
+    User(name: 'Juanito', email: 'dasds@dsads', online: false, uid: ''),
+    User(name: 'Luisito', email: 'klksd@dssd', online: true, uid: ''),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    final user = authService.user;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text(
-            'Mi nombre',
-            style: TextStyle(color: Colors.black54),
+          title:  Text(
+            user.name,
+            style: const TextStyle(color: Colors.black54),
           ),
           elevation: 1,
           backgroundColor: Colors.white,
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, 'login');
+              AuthService.deleteToken();
+            },
             icon: const Icon(
               Icons.exit_to_app,
               color: Colors.black54,

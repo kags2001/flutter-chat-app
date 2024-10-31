@@ -1,8 +1,11 @@
+import 'package:chat_app/helpers/show_alert.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/button_login.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/label_login_widget.dart';
 import 'package:chat_app/widgets/logo_login_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -19,9 +22,13 @@ class LoginPage extends StatelessWidget {
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  LogoLoginWidget(text: 'Messenger',),
+                  LogoLoginWidget(
+                    text: 'Messenger',
+                  ),
                   _Form(),
-                  LabelLoginWidget(route: 'register',),
+                  LabelLoginWidget(
+                    route: 'register',
+                  ),
                   Text(
                     'Terminos y condiciones de uso',
                     style: TextStyle(fontWeight: FontWeight.w200),
@@ -47,6 +54,8 @@ class _FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -64,9 +73,21 @@ class _FormState extends State<_Form> {
             textEditingController: passwordCtrl,
             isPassword: true,
           ),
-          ButtonLogin(onPressed: (){
-            print(emailCtrl.text);
-          }, text: 'Ingrese',)
+          ButtonLogin(
+            onPressed: authService.isLoading
+                ? null
+                : () async {
+                    FocusScope.of(context).unfocus();
+                    final loginOk = await authService.login(
+                        emailCtrl.text.trim(), passwordCtrl.text.trim());
+                    if (loginOk) {
+                      Navigator.pushReplacementNamed(context, 'users');
+                    } else {
+                      showAlertPersonilize(context, 'Login incorrecto', 'Revise sus credenciales nuevamente');
+                    }
+                  },
+            text: 'Ingrese',
+          )
         ],
       ),
     );

@@ -1,8 +1,12 @@
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/button_login.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/label_login_widget.dart';
 import 'package:chat_app/widgets/logo_login_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../helpers/show_alert.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -48,6 +52,8 @@ class _FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final register = Provider.of<AuthService>(context);
+
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -71,8 +77,13 @@ class _FormState extends State<_Form> {
             textEditingController: passwordCtrl,
             isPassword: true,
           ),
-          ButtonLogin(onPressed: (){
-            print(emailCtrl.text);
+          ButtonLogin(onPressed: register.isLoading ? null : () async {
+           final resp =  await register.register(nameCtrl.text, emailCtrl.text,passwordCtrl.text);
+           if (resp){
+             Navigator.pushReplacementNamed(context, 'users');
+           } else {
+             showAlertPersonilize(context, 'Registro incorrecto', resp);
+           }
           }, text: 'Ingrese',)
         ],
       ),

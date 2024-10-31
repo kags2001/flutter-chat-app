@@ -1,5 +1,7 @@
 import 'package:chat_app/routes/routes.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,16 +13,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: 'users',
-      debugShowCheckedModeBanner: false,
-      routes: appRoutes,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthService()),
+      ],
+      child: MaterialApp(
+        initialRoute: 'loading',
+        debugShowCheckedModeBanner: false,
+        routes: appRoutes,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const Center(child: Text('Hola'),)
       ),
-      home: const Center(child: Text('Hola'),)
     );
   }
 }

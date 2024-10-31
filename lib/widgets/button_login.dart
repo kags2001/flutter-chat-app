@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ButtonLogin extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String text;
   const ButtonLogin({super.key, required this.onPressed, required this.text});
 
